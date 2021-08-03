@@ -7,12 +7,12 @@
     "start": "parcel index.html",
     "build": "parcel build index.html --dist-dir ./dist"
   },
-  "author": "Jonas Schedtmann",
+  "author": "Lewis Zhang",
   "license": "ISC",
   "devDependencies": {
-    "@parcel/transformer-image": "^2.0.0-nightly.2400",
-    "@parcel/transformer-sass": "^2.0.0-nightly.778",
-    "parcel": "^2.0.0-beta.1",
+    "@parcel/transformer-image": "^2.0.0-beta.3",
+    "@parcel/transformer-sass": "^2.0.0-beta.3",
+    "parcel": "^2.0.0-beta.3",
     "sass": "^1.26.10"
   },
   "dependencies": {
