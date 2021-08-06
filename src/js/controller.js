@@ -1,27 +1,25 @@
 import * as model from './model.js';
-import recipeView from './views/RecipeView.js';
+import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
+import resultsView from './views/resultsView.js';
+import paginationView from './views/paginationView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-const recipeContainer = document.querySelector('.recipe');
-
-const timeout = function (s) {
-  return new Promise(function (_, reject) {
-    setTimeout(function () {
-      reject(new Error(`Request took too long! Timeout after ${s} second`));
-    }, s * 1000);
-  });
-};
-////////////////////////////////////////////////////////////////
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
-    console.log(id);
 
     if (!id) return;
     recipeView.renderSpinner();
+
+    // 0 Update results view to mark selected search result
+    resultsView.update(model.getSearchResultsPage());
 
     // 1 Loading recipe
     await model.loadRecipe(id);
@@ -29,10 +27,55 @@ const controlRecipes = async function () {
     // 2 Rending recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
-    alert(`${err} from controller`);
+    recipeView.renderError();
   }
 };
 
-['hashchange', 'load'].forEach(ev =>
-  window.addEventListener(ev, controlRecipes)
-);
+const controlSearchResults = async function () {
+  try {
+    resultsView.renderSpinner();
+
+    // 1 get search query
+    const query = searchView.getQuery();
+
+    if (!query) return;
+
+    // 2 load search results
+    await model.loadSearchResults(query);
+
+    // 3 render results
+    // resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPage());
+
+    // 4 Render initial pagination buttons
+    paginationView.render(model.state.search);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const controlPagination = function (goToPage) {
+  //  render newresults
+  resultsView.render(model.getSearchResultsPage(goToPage));
+
+  // Render new pagination buttons
+  paginationView.render(model.state.search);
+};
+
+const controlServings = function (newServing) {
+  // Update the recipe servings (in state)
+  model.updateServings(newServing);
+
+  // Update the recipe view
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
+};
+
+//publisher-subscriber pattern
+const init = function () {
+  recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
+  searchView.addHandlerSearch(controlSearchResults);
+  paginationView.addHandlerClick(controlPagination);
+};
+init();
