@@ -10,7 +10,7 @@ export default class View {
    * @returns {undefined | string}  A markup string is returned if render is false
    * @this {Object} View instance
    * @author Lewis Zhang
-   * @todo Finish implementation
+   * @todo Finish implementationx
    */
   render(data, render = true) {
     this._data = data;
