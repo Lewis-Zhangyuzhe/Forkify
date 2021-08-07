@@ -3,9 +3,21 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
+  /**
+   * Render the received object to the DOM
+   * @param {Object | Object[]} data  The data to be rendered
+   * @param {boolean} [render =true] If false, create markup string instead of rendering to the DOM
+   * @returns {undefined | string}  A markup string is returned if render is false
+   * @this {Object} View instance
+   * @author Lewis Zhang
+   * @todo Finish implementation
+   */
+  render(data, render = true) {
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
@@ -19,12 +31,9 @@ export default class View {
     const newDOM = document.createRange().createContextualFragment(newMarkup);
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this._parentElement.querySelectorAll('*'));
-    console.log(newElements);
-    console.log(curElements);
 
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
-      console.log(curEl, newEl.isEqualNode(curEl));
 
       // updates changed TEXT
       if (
