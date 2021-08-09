@@ -10,6 +10,8 @@
   "author": "Lewis Zhang",
   "license": "ISC",
   "devDependencies": {
+    "@parcel/transformer-image": "^2.0.0-beta.1",
+    "@parcel/transformer-sass": "^2.0.0-beta.1",
     "parcel": "^2.0.0-beta.1",
     "sass": "^1.26.10"
   },
